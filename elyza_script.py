@@ -22,11 +22,12 @@ app = Flask(__name__)
 
 # SSE処理
 def event_stream(qa, context, question):
-    # 質問に対する回答を生成する
-    response = qa.ask(context=context, question=question)
-
-    # 回答をイベントとして送信する
-    yield 'data: {}\n\n'.format(json.dumps(response))
+    try:
+        response = qa.run(context=context, question=question)
+        yield 'data: {}\n\n'.format(json.dumps(response))
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        yield 'data: {"error": "An error occurred while processing the request."}\n\n'
 
 # ask
 @app.route('/ask', methods=['POST'])
