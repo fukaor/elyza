@@ -10,8 +10,5 @@ COPY . /app
 # コンテナ内でコマンドを実行するディレクトリを設定する
 WORKDIR /app
 
-# 初期化スクリプトを実行する
-RUN python initialize.py
-
 # コンテナが起動したときに実行するコマンドを設定する
 CMD ["python", "elyza_script.py"]

@@ -10,11 +10,10 @@
 #==================================
 # 必要ライブラリ
 from flask import Flask, request, Response
-import time
 import json
 import pickle
 # 関数一覧
-from functions import _SETUP_MODEL, _SETUP_PROMPT, _SETUP_QA
+from functions import _PREPARE_DATA, _SETUP_RAG, _SETUP_MODEL, _SETUP_PROMPT, _SETUP_QA
 
 #==================================
 # API
@@ -39,11 +38,17 @@ def ask():
 
 if __name__ == "__main__":
     # 初期設定
+    url = "https://ja.m.wikipedia.org/wiki/ONE_PIECE"
     model_id = "elyza/ELYZA-japanese-Llama-2-7b-instruct"
+    filename = 'textfile.txt'
 
-    # 初期化済みのretrieverをロードする
+    # データのベクトル化等の準備
+    filename = _PREPARE_DATA(url, filename)
+    retriever = _SETUP_RAG(filename)
+
+    # retrieverをロードする
     with open('retriever.pkl', 'rb') as f:
-        retriever = pickle.load(f)
+        pickle.dump(retriever, f)
 
     # モデルとトークナイザを設定する
     model, tokenizer = _SETUP_MODEL(model_id)
