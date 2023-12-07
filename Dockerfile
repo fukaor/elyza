@@ -2,13 +2,16 @@
 FROM python:3.8
 
 # 必要なパッケージをインストールする
-RUN pip install transformers langchain accelerate bitsandbytes pypdf tiktoken sentence_transformers faiss-gpu trafilatura --quiet
+RUN pip install transformers langchain accelerate bitsandbytes pypdf tiktoken sentence_transformers faiss-gpu trafilatura flask --quiet
 
 # LLMのコードをコンテナにコピーする
 COPY . /app
 
 # コンテナ内でコマンドを実行するディレクトリを設定する
 WORKDIR /app
+
+# 初期化スクリプトを実行する
+RUN python initialize.py
 
 # コンテナが起動したときに実行するコマンドを設定する
 CMD ["python", "elyza_script.py"]
